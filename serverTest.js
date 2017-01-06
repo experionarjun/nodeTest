@@ -8,14 +8,17 @@ var userRouter = express.Router();
 
 // var testPostData = { name:"Harish",age:22};
 
+//=========================Read all person ========================================
 
-
-userRouter.route('/').get(function(req,res){				//Read all person
+userRouter.route('/').get(function(req,res){				
 	 var data =fs.readFileSync(__dirname+'/user.json');
 	 data = JSON.parse(data);
 	 res.send(data);
 })
-.post(function(req,res){									//Insert new person
+
+//==========================Insert new person ====================================
+
+.post(function(req,res){									
 	var data = fs.readFileSync(__dirname+'/user.json');
 	data = JSON.parse(data);
 	data.push(req.body);
@@ -24,7 +27,9 @@ userRouter.route('/').get(function(req,res){				//Read all person
 	res.end();
 });
 
-userRouter.route('/:name').get(function(req,res){              //Read a specific person
+//========================Read a specific person ==============================
+
+userRouter.route('/:name').get(function(req,res){              
 	 var data =fs.readFileSync(__dirname+'/user.json');
 	 data = JSON.parse(data);
 	 var response = __.find(data,{"name":req.params.name});
@@ -38,7 +43,10 @@ userRouter.route('/:name').get(function(req,res){              //Read a specific
 	 		res.send(response);
 	}
 })
-.delete(function(req,res){										//Delete a person
+
+//======================Delete a person=====================================
+
+.delete(function(req,res){										
 	var data = fs.readFileSync(__dirname+'/user.json');
 	data = JSON.parse(data);
 	var response = __.find(data,{"name":req.params.name});
@@ -55,6 +63,9 @@ userRouter.route('/:name').get(function(req,res){              //Read a specific
 					res.end();
 	}	
 })
+
+//============================Replace age================================
+
 .put(function(req,res){
 	var data=fs.readFileSync(__dirname+'/user.json');
 	data = JSON.parse(data);
@@ -68,7 +79,7 @@ userRouter.route('/:name').get(function(req,res){              //Read a specific
 
 	 else{
 					data = data.filter(function(item){	
-																//Replace age
+																
 						if(item.name == req.params.name){
 													
 								item.age = req.body.age; console.log(req.body);
@@ -96,43 +107,6 @@ app.use('/user',userRouter);
 app.listen(port,function(){
 	console.log("Running @ port "+port);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	// ===================
-	// 	TEST CASES
-	// ===================
-
-
-					// app.get('/',function(req,res){
-					// 	res.send("Hello World");
-					// });
-
-					// app.post('/',function(req,res){
-					// 	res.send("Post Hello");
-					// });
 
 
 
