@@ -27,29 +27,59 @@ userRouter.route('/').get(function(req,res){				//Read all person
 userRouter.route('/:name').get(function(req,res){              //Read a specific person
 	 var data =fs.readFileSync(__dirname+'/user.json');
 	 data = JSON.parse(data);
-	 res.send(__.find(data,{"name":req.params.name}));
+	 var response = __.find(data,{"name":req.params.name});
+
+	 if(response === undefined){
+	 				
+	 				res.send("User Not Found\nTry again");
+	 }
+
+	 else{
+	 		res.send(response);
+	}
 })
 .delete(function(req,res){										//Delete a person
 	var data = fs.readFileSync(__dirname+'/user.json');
 	data = JSON.parse(data);
-	__.remove(data,__.find(data,{"name":req.params.name}));
-	data = JSON.stringify(data);
-	fs.writeFileSync(__dirname+'/user.json',data);
-	res.end();	
+	var response = __.find(data,{"name":req.params.name});
+
+	 if(response === undefined){
+	 				
+	 				res.send("User Not Found\nTry again");
+	 }
+
+	 else{
+					__.remove(data,response);
+					data = JSON.stringify(data);
+					fs.writeFileSync(__dirname+'/user.json',data);
+					res.end();
+	}	
 })
 .put(function(req,res){
 	var data=fs.readFileSync(__dirname+'/user.json');
 	data = JSON.parse(data);
-	data = data.filter(function(item){								//Replace age
-		if(item.name == req.params.name){
-			item.age = req.body.age; console.log(req.body);
-			//object cannot be directly changed (item = req.body) wont work		
+	var response = __.find(data,{"name":req.params.name});
+
+	 if(response === undefined){
+
+	 				res.send("User Not Found\nTry again");
+
+	 }
+
+	 else{
+					data = data.filter(function(item){	
+																//Replace age
+						if(item.name == req.params.name){
+													
+								item.age = req.body.age; console.log(req.body);
+								//object cannot be directly changed (item = req.body) wont work		
+						}
+					return item;
+					});
+					data = JSON.stringify(data);
+					fs.writeFileSync(__dirname+'/user.json',data);
+					res.send("New Data:\n"+data);
 		}
-		return item;
-	});
-	data = JSON.stringify(data);
-	fs.writeFileSync(__dirname+'/user.json',data);
-	res.send("New Data:\n"+data);
 });
 
 
