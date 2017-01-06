@@ -5,22 +5,26 @@ var __ = require("lodash");
 var bodyParser = require('body-parser');
 var port = process.env.PORT || 8000 ;
 var userRouter = express.Router();	
+//function to read from file and convert to JSON
+function readData(){
 
-// var testPostData = { name:"Harish",age:22};
+		var data =fs.readFileSync(__dirname+'/user.json');	
+	 	data = JSON.parse(data);
+	 	return data;
+}
+
 
 //=========================Read all person ========================================
 
 userRouter.route('/').get(function(req,res){				
-	 var data =fs.readFileSync(__dirname+'/user.json');
-	 data = JSON.parse(data);
+	 var data =readData();
 	 res.send(data);
 })
 
 //==========================Insert new person ====================================
 
 .post(function(req,res){									
-	var data = fs.readFileSync(__dirname+'/user.json');
-	data = JSON.parse(data);
+	var data = readData();
 	data.push(req.body);
 	data = JSON.stringify(data);
 	fs.writeFileSync(__dirname+'/user.json',data);
@@ -30,8 +34,7 @@ userRouter.route('/').get(function(req,res){
 //========================Read a specific person ==============================
 
 userRouter.route('/:name').get(function(req,res){              
-	 var data =fs.readFileSync(__dirname+'/user.json');
-	 data = JSON.parse(data);
+	 var data =readData();
 	 var response = __.find(data,{"name":req.params.name});
 
 	 if(response === undefined){
@@ -47,8 +50,7 @@ userRouter.route('/:name').get(function(req,res){
 //======================Delete a person=====================================
 
 .delete(function(req,res){										
-	var data = fs.readFileSync(__dirname+'/user.json');
-	data = JSON.parse(data);
+	var data = readData();
 	var response = __.find(data,{"name":req.params.name});
 
 	 if(response === undefined){
@@ -67,8 +69,7 @@ userRouter.route('/:name').get(function(req,res){
 //============================Replace age================================
 
 .put(function(req,res){
-	var data=fs.readFileSync(__dirname+'/user.json');
-	data = JSON.parse(data);
+	var data=readData();
 	var response = __.find(data,{"name":req.params.name});
 
 	 if(response === undefined){
@@ -78,18 +79,18 @@ userRouter.route('/:name').get(function(req,res){
 	 }
 
 	 else{
-					data = data.filter(function(item){	
-																
-						if(item.name == req.params.name){
-													
-								item.age = req.body.age; console.log(req.body);
-								//object cannot be directly changed (item = req.body) wont work		
-						}
-					return item;
-					});
-					data = JSON.stringify(data);
-					fs.writeFileSync(__dirname+'/user.json',data);
-					res.send("New Data:\n"+data);
+			data = data.filter(function(item){	
+														
+				if(item.name == req.params.name){
+											
+						item.age = req.body.age; console.log(req.body);
+						//object cannot be directly changed (item = req.body) wont work		
+				}
+			return item;
+			});
+			data = JSON.stringify(data);
+			fs.writeFileSync(__dirname+'/user.json',data);
+			res.send("New Data:\n"+data);
 		}
 });
 
