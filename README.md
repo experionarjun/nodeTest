@@ -7,6 +7,12 @@ Just read through these files to get a basic intro on how to do nodejs.
  
  ```
  cd nodeTest
- npm install
- nodemon app
  ```
+ Install dependencies
+ ```
+ npm install
+ ```
+Run using
+```
+node serverTest.js
+```
